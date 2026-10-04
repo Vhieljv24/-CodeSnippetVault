@@ -35,7 +35,6 @@ public class VaultGUI extends javax.swing.JFrame {
 
         snippetTable.setModel(new SnippetTableModel(new Object[]{"Title", "Language", "Date Created"}));
         snippetTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        cmbFilterLanguage.setSelectedItem(PreferencesHelper.getLastFilter());
         setLocationRelativeTo(null);
         setIconImage(createAppIcon());
 
@@ -47,6 +46,11 @@ public class VaultGUI extends javax.swing.JFrame {
         emptyStatePanel.add(emptyStateLabel, BorderLayout.CENTER);
 
         txtSearch.getDocument().addDocumentListener(new SearchDocumentListener(this::loadSnippets));
+
+        // Setting the combo box's selected item can fire its actionPerformed
+        // handler immediately, which calls loadSnippets() - so this must come
+        // after emptyStateLabel/emptyStatePanel above are already built.
+        cmbFilterLanguage.setSelectedItem(PreferencesHelper.getLastFilter());
 
         loadSnippets();
     }
